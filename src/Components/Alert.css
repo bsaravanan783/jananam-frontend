@@ -1,0 +1,118 @@
+.alert {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.alert-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 75%;
+  max-width: 600px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.alert-content h2 {
+  margin: 0 0 10px;
+  color: #2b2d42;
+}
+
+.alert-content p {
+  margin: 5px 0;
+}
+
+.alert-content label {
+  display: block;
+  margin: 10px 0;
+}
+
+.alert-content input {
+  padding: 10px;
+  width: 50%;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  transition: border-color 0.2s;
+}
+
+.alert-content input:focus {
+  border-color: #fff;
+}
+
+.alert-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.alert-buttons button {
+  flex: 1;
+  margin: 0 5px;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.cancel-button {
+  background-color: #fff;
+  color: #000;
+  font-weight: bold;
+  border: 2px solid #ff0000;
+  border-radius: 4px;
+}
+
+.cancel-button:hover {
+  background-color: #fff;
+  border-color: #ff0000;
+}
+
+.proceed-button {
+  background-color: #2b2d42;
+  color: white;
+}
+
+.proceed-button:hover {
+  background-color: #2b2d42;
+}
+
+@media (max-width: 768px) {
+  .alert-content {
+    width: 90%;
+    padding: 15px;
+  }
+
+  .alert-content input {
+    width: 80%;
+  }
+}
+
+@media (max-width: 480px) {
+  .alert-content {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .alert-buttons button {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .alert-content input {
+    width: 90%;
+  }
+}
+
+.error-message {
+  margin-top: 5px;
+  font-size: 0.9em;
+}

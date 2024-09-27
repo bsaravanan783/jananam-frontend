@@ -1,13 +1,179 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.app {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+    background-color: #f4f4f9;
+}
+
+.BayText {
+    color: #2b2d42;
+    padding-top: 20;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2b2d42;
+    color: white;
+    padding: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+.header .welcome-text {
+    font-size: 1.5rem;
+    color: #ffcc00;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+}
+
+.profile-name {
+    margin-right: 15px;
+    font-size: 1rem;
+}
+
+.profile-picture {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.stage-image {
+    width: 100%;
+    height: 40vh;
+    border-radius: 5px;
+    object-fit: cover;
+    margin-top: 10px;
+}
+
+.bays-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+
+    padding: 20px;
+}
+
+.boys-bays,
+.girls-bays {
+    flex: 1;
+    margin: 10px;
+    min-width: 45%;
+    text-align: left;
+}
+
+.boys-bays h2,
+.girls-bays h2 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.bay {
+    margin: 10px 0;
+}
+
+.proceed-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #f72585;
+    color: white;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.proceed-button:hover {
+    background-color: #d60073;
+}
+
+/* Media Queries for Mobile Devices */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px;
+    }
+
+    .header .welcome-text {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+
+    .profile {
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .profile-picture {
+        width: 35px;
+        height: 35px;
+    }
+
+    .stage-image {
+        height: 25vh;
+    }
+
+    .bays-container {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .boys-bays,
+    .girls-bays {
+        min-width: 100%;
+        margin: 5px 0;
+    }
+
+    .proceed-button {
+        width: 100%;
+        padding: 12px;
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding: 5px;
+    }
+
+    .header .welcome-text {
+        font-size: 1rem;
+    }
+
+    .profile-name {
+        font-size: 0.9rem;
+    }
+
+    .profile-picture {
+        width: 30px;
+        height: 30px;
+    }
+
+    .stage-image {
+        height: 20vh;
+    }
+
+    .boys-bays,
+    .girls-bays h2 {
+        font-size: 1rem;
+    }
+
+    .proceed-button {
+        font-size: 16px;
+        padding: 10px;
+    }
 }

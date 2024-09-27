@@ -1,0 +1,54 @@
+.bay {
+  border: 2px solid #2b2d42;
+  padding: 20px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  border-radius: 8px;
+  background-color: #eaeaea;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+
+.bay-title {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: center;
+  color: #333;
+}
+
+.bay-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bay-detail {
+  margin: 5px 0;
+  font-size: 1.1em;
+  color: #666;
+}
+
+.bay-price {
+  font-weight: bold;
+  color: #2b2d42;
+  font-size: 1.2em;
+}
+
+.bay-button {
+  background-color: #2b2d42;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.bay-button:hover {
+  background-color: #2b2d42;
+}
