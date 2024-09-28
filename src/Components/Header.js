@@ -1,5 +1,5 @@
 import React from 'react';
-import GoogleAuth from './GoogleAuth';
+
 const Header = () => {
   return (
     <header className="header">
@@ -13,7 +13,7 @@ const Header = () => {
           alt="Profile"
           className="profile-picture"
         />
-        <GoogleAuth/>
+    
        
       </div>
 

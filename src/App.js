@@ -1,52 +1,91 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import './index.css';
-import Header from './Components/Header';
-import Bays from './Components/Bays';
-import Alert from './Components/Alert';
-import RazorPay from './Components/RazorPay';
-import stageImage from './Components/stage.jpg';
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router } from "react-router-dom";
+import axios from "axios";
+import "./index.css";
+import Header from "./Components/Header";
+import Bays from "./Components/Bays";
+import Alert from "./Components/Alert";
+import stageImage from "./Components/stage.jpg";
 
 const App = () => {
-  const [boysBays, setBoysBays] = useState([
-    { id: 1, bayName: 'Boys Bay 1', totalSeats: 80, availableSeats: 80, bayAmount: 200 },
-    { id: 2, bayName: 'Boys Bay 3', totalSeats: 60, availableSeats: 60, bayAmount: 150 },
-    { id: 3, bayName: 'Boys Bay 5', totalSeats: 60, availableSeats: 60, bayAmount: 150 },
-  ]);
-
-  const [girlsBays, setGirlsBays] = useState([
-    { id: 4, bayName: 'Girls Bay 2', totalSeats: 120, availableSeats: 100, bayAmount: 180 },
-    { id: 5, bayName: 'Girls Bay 4', totalSeats: 90, availableSeats: 80, bayAmount: 250 },
-    { id: 6, bayName: 'Girls Bay 6', totalSeats: 90, availableSeats: 80, bayAmount: 250 },
-  ]);
-
+  const [boysBays, setBoysBays] = useState([]);
+  const [girlsBays, setGirlsBays] = useState([]);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [selectedBay, setSelectedBay] = useState(null);
   const [ticketCount, setTicketCount] = useState(1);
+
+  // Fetch bay data from backend on component mount
+  useEffect(() => {
+    const fetchBays = async () => {
+      try {
+        const response = await axios.get("http://localhost:8000/getBays");
+        const { boysBays, girlsBays } = response.data;
+        setBoysBays(boysBays);
+        setGirlsBays(girlsBays);
+      } catch (error) {
+        console.error("Error fetching bays:", error);
+      }
+    };
+    fetchBays();
+  }, []);
 
   const handleBayClick = (bay) => {
     setSelectedBay(bay);
     setIsAlertOpen(true);
   };
-  const handleProceedToPayment = () => {
+
+  const handleProceedToPayment = async () => {
     if (selectedBay && ticketCount > 0 && ticketCount <= 5) {
-      const totalAmount = selectedBay.bayAmount * ticketCount;
+      const totalAmount = selectedBay.amount_of_ticket * ticketCount; // Updated to use amount_of_ticket
 
-      const updatedBays = [...boysBays, ...girlsBays].map((bay) => {
-        if (bay.id === selectedBay.id) {
-          return { ...bay, availableSeats: bay.availableSeats - ticketCount };
-        }
-        return bay;
-      });
+      const formData = {
+        amount: totalAmount,
+        productinfo: "Test Product",
+        firstname: "Anbarasan",
+        email: "ajithkumar161105@gmail.com",
+      };
 
-      setBoysBays(updatedBays.filter(b => b.id <= 3));
-      setGirlsBays(updatedBays.filter(b => b.id > 3));
-      setIsAlertOpen(false);
-      setSelectedBay(null);
-      setTicketCount(1);
-      alert(`Proceeding to payment for amount: $${totalAmount}`);
+      try {
+        const response = await axios.post(
+          "http://localhost:8000/generate-hash",
+          formData
+        );
+        const { hash, txnid } = response.data;
+
+        const payUForm = document.createElement("form");
+        payUForm.method = "POST";
+        payUForm.action = "https://test.payu.in/_payment";
+
+        const fields = {
+          key: "Hfr7dn",
+          txnid: txnid,
+          amount: totalAmount,
+          productinfo: formData.productinfo,
+          firstname: formData.firstname,
+          email: formData.email,
+          phone: "8056901611",
+          surl: "https://test.payu.in/success",
+          furl: "http://localhost:5000/payment-failure",
+          hash: hash,
+          service_provider: "payu_paisa",
+        };
+
+        Object.keys(fields).forEach((key) => {
+          const input = document.createElement("input");
+          input.type = "hidden";
+          input.name = key;
+          input.value = fields[key];
+          payUForm.appendChild(input);
+        });
+
+        document.body.appendChild(payUForm);
+        payUForm.submit();
+      } catch (error) {
+        console.error("Error generating hash:", error);
+        alert("Error generating hash");
+      }
     } else {
-      alert('Please select a valid number of tickets (1-5).');
+      alert("Please select a valid number of tickets (1-5).");
     }
   };
 
@@ -61,26 +100,80 @@ const App = () => {
       <div className="app">
         <Header />
         <img src={stageImage} alt="Stage" className="stage-image" />
-        <h1 className='BayText'>Bays</h1>
-        <Bays boysBays={boysBays} girlsBays={girlsBays} onBayClick={handleBayClick} />
+        <h1 className="BayText">Bays</h1>
+        <Bays
+          boysBays={boysBays}
+          girlsBays={girlsBays}
+          onBayClick={handleBayClick}
+        />
         <Alert
           isOpen={isAlertOpen}
           onClose={closeAlert}
-          bayNo={selectedBay ? selectedBay.bayName : ''}
-          bayAmount={selectedBay ? selectedBay.bayAmount : 0}
+          bayDetails={selectedBay} // Pass the entire bay object
           ticketCount={ticketCount}
           setTicketCount={setTicketCount}
           onProceed={handleProceedToPayment}
         />
-        <Link to="/razorpay">
-          <button className="proceed-button">Go to RazorPay</button>
-        </Link>
       </div>
-      <Routes>
-        <Route path="/razorpay" element={<RazorPay />} />
-      </Routes>
     </Router>
   );
 };
 
 export default App;
+
+// import React, { useEffect, useState } from "react";
+// import { PublicClientApplication } from "@azure/msal-browser";
+
+// const msalConfig = {
+//   auth: {
+//     clientId: "08a2c4f6-1de5-4546-828b-6e2ff08dd3b2", // Your Client ID
+//     authority:
+//       "https://login.microsoftonline.com/6b8b8296-bdff-4ad8-93ad-84bcbf3842f5", // Your tenant ID
+//     redirectUri: "http://localhost", // Your redirect URI
+//   },
+// };
+
+// const msalInstance = new PublicClientApplication(msalConfig);
+
+// const App = () => {
+//   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+//   useEffect(() => {
+//     const initializeMSAL = async () => {
+//       try {
+//         await msalInstance.initialize(); // Initialize the MSAL instance
+//         const accounts = msalInstance.getAllAccounts();
+//         if (accounts.length > 0) {
+//           setIsAuthenticated(true); // User is already authenticated
+//         }
+//       } catch (error) {
+//         console.error("MSAL Initialization Error:", error);
+//       }
+//     };
+
+//     initializeMSAL();
+//   }, []);
+
+//   const login = async () => {
+//     try {
+//       const loginResponse = await msalInstance.loginPopup();
+//       console.log("Login successful:", loginResponse);
+//       setIsAuthenticated(true);
+//     } catch (error) {
+//       console.error("Login Error:", error);
+//     }
+//   };
+
+//   return (
+//     <div>
+//       <h1>My App</h1>
+//       {isAuthenticated ? (
+//         <p>Welcome!</p>
+//       ) : (
+//         <button onClick={login}>Login</button>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default App;
