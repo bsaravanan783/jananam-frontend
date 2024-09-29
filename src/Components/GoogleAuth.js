@@ -8,7 +8,6 @@ import { auth } from './Firebase';
 const GoogleAuth = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
-
   useEffect(() => {
     const getUserData = async () => {
       try {
