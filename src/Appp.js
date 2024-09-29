@@ -35,58 +35,25 @@ const App = () => {
 
   const handleProceedToPayment = async () => {
     if (selectedBay && ticketCount > 0 && ticketCount <= 5) {
-      const totalAmount = selectedBay.amount_of_ticket * ticketCount;
-
-      const formData = {
-        amount: totalAmount,
-        productinfo: "Test Product",
-        firstname: "Anbarasan",
-        email: "ajithkumar161105@gmail.com",
-      };
-
       try {
-        const response = await axios.post(
-          "http://localhost:8000/generate-hash",
-          formData
-        );
-        const { hash, txnid } = response.data;
-
-        const payUForm = document.createElement("form");
-        payUForm.method = "POST";
-        payUForm.action = "https://test.payu.in/_payment";
-
-        const fields = {
-          key: "Hfr7dn",
-          txnid: txnid,
-          amount: totalAmount,
-          productinfo: formData.productinfo,
-          firstname: formData.firstname,
-          email: formData.email,
-          phone: "8056901611",
-          surl: "https://test.payu.in/success",
-          furl: "http://localhost:8000/payment-failure",
-          hash: hash,
-          service_provider: "payu_paisa",
-        };
-
-        Object.keys(fields).forEach((key) => {
-          const input = document.createElement("input");
-          input.type = "hidden";
-          input.name = key;
-          input.value = fields[key];
-          payUForm.appendChild(input);
-        });
-
-        document.body.appendChild(payUForm);
-        payUForm.submit();
+        // Step 1: Get payment data from the backend
+        const paymentResponse = await axios.post("http://localhost:8000/payment", { selectedBay, ticketCount });
+        const paymentData = paymentResponse.data;
+  
+        // Step 2: Initiate the payment by submitting the payment form from the backend
+        const formResponse = await axios.post("http://localhost:8000/initiate-payment", { paymentData });
+        
+        // The form will be submitted automatically by the backend response
+        document.write(formResponse.data); // This will write the form and execute the script to submit it
       } catch (error) {
-        console.error("Error generating hash:", error);
-        alert("Error generating hash");
+        console.error("Error during payment processing:", error);
+        alert("Error during payment processing");
       }
     } else {
       alert("Please select a valid number of tickets (1-5).");
     }
   };
+  
 
   const closeAlert = () => {
     setIsAlertOpen(false);
@@ -108,7 +75,7 @@ const App = () => {
         <Alert
           isOpen={isAlertOpen}
           onClose={closeAlert}
-          bayDetails={selectedBay} // Pass the entire bay object
+          bayDetails={selectedBay} 
           ticketCount={ticketCount}
           setTicketCount={setTicketCount}
           onProceed={handleProceedToPayment}

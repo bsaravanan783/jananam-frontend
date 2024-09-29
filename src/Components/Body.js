@@ -5,6 +5,7 @@ import Logout from "./Logout";
 import { Failure } from "./Failure";
 import { Success } from "./Success";
 import Ticket from "./Ticket";
+import BookingForm from "./Form";
 
 const Body = () => {
   const appRouter = createBrowserRouter([
@@ -27,6 +28,10 @@ const Body = () => {
     {
       path: "/ticket",
       element: <Ticket />,
+    },
+    {
+      path: "/booking",
+      element: <BookingForm />,
     },
   ]);
 
